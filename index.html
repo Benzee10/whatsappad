@@ -2,21 +2,100 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Redirecting...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Phone Number Generator</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 40px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .phone-number {
+            font-size: 32px;
+            margin-bottom: 30px;
+            letter-spacing: 3px;
+            font-weight: bold;
+        }
+
+        .call-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 15px 25px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .call-btn:hover {
+            background-color: #218838;
+        }
+    </style>
 </head>
 <body>
-<script type="text/javascript">
-    // Define the two URLs
-    var urls = [
-        "https://padsims.com/g5r2yreeu?key=c111e0d1c9cca684cfa0c9833bec5600",
-        "https://padsims.com/frzgbrzi?key=62888a26574fde854963d50f6ed83081"
-    ];
 
-    // Randomly select one of the URLs
-    var randomUrl = urls[Math.floor(Math.random() * urls.length)];
+    <div class="container">
+        <h1>Call Me Now!</h1>
+        <div class="phone-number" id="phoneNumber">Loading...</div>
+        <a href="https://redirecting-kappa.vercel.app/" class="call-btn" id="callBtn">Call Me</a>
+    </div>
 
-    // Redirect to the randomly selected URL
-    window.location.href = randomUrl;
-</script>
+    <script>
+        // Function to generate a random 11-digit phone number
+        function generatePhoneNumber() {
+            let phoneNumber = "";
+            for (let i = 0; i < 11; i++) {
+                phoneNumber += Math.floor(Math.random() * 10);
+            }
+
+            // Hide some digits (randomly chosen 4 digits)
+            let hiddenPhone = phoneNumber.split('');
+            let indicesToHide = [];
+
+            // Randomly pick 4 indices to hide
+            while (indicesToHide.length < 4) {
+                let randIndex = Math.floor(Math.random() * 11);
+                if (!indicesToHide.includes(randIndex)) {
+                    indicesToHide.push(randIndex);
+                }
+            }
+
+            indicesToHide.forEach(index => {
+                hiddenPhone[index] = '*';
+            });
+
+            return hiddenPhone.join('');
+        }
+
+        // Update the phone number on the page
+        document.getElementById('phoneNumber').innerText = generatePhoneNumber();
+
+        // Redirect when Call Me button is clicked
+        document.getElementById('callBtn').addEventListener('click', function () {
+            // Redirect to a specific URL
+            window.location.href = 'https://example.com/call'; // Change this to your desired link
+        });
+    </script>
+
 </body>
 </html>
